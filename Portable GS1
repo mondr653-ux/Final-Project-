@@ -1,0 +1,30 @@
+-- Existing information structure -- 
+{
+  "structure_name": "GS1 Digital Link",
+  "source_link": "https://www.gs1.org/standards/gs1-digital-link",
+  "data_format": "URI encoded in a QR code or 2D barcode",
+  "access_method": "Consumer scans the QR code or 2D barcode to access product-linked web information",
+  "sample_uri": "https://dalgiardino.com/mobile_demo/app4/app4_post_scan.html",
+  "parsed_identifiers": {
+    "gtin": "00012345678905",
+    "batch_or_lot_number": "BATCH20260508",
+    "expiration_date": "2026-05-20"
+  },
+  "linked_web_resources": {
+    "product_landing_page": "https://dalgiardino.com/mobile_demo/app4/app4_post_scan.html",
+    "traceability_information_page": "https://dalgiardino.com/mobile_demo/app4/app4_traceability.html",
+    "nutrition_information_page": "https://dalgiardino.com/mobile_demo/app4/app4_nutrition.html"
+  },
+  "observed_limitations_for_our_project": {
+    "origin_location_available": false,
+    "processing_facility_available": false,
+    "processing_steps_available": false,
+    "inspection_status_available": false,
+    "inspection_date_available": false,
+    "recall_status_available": false,
+    "verification_status_available": false,
+    "public_private_access_control_available": false,
+    "change_log_available": false
+  }
+}
+
