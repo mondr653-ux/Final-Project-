@@ -1,0 +1,30 @@
+﻿Group Member: Raymond Xu Jihan Yang
+Product: Food Safefy Inspection & Management System 
+Purpose: 
+"Help the public understand whether food is safe, healthy and reliable, enhance the transparency of the food supply chain, reduce information asymmetry, and enable consumers to make healthier choices based on reliable information. "
+
+Who would benefit
+"Ordinary consumers, children and families, people with food allergies, patients with chronic diseases, the elderly, schools and hospitals, food producers, regulatory agencies, and the entire public health system. "
+
+What impact made 
+"This product can enhance the transparency of food, boost public trust in food safety, help reduce health risks caused by food safety incidents, and encourage enterprises to raise production standards. In the long term,"
+"it can promote more standardized food supply chain management, support a healthier social dietary environment, and assist governments and organizations in identifying potential food safety issues earlier."
+
+1. QR label scanner(MISM Specialization: Information Architecture)
+"QR code scanner based food traceability system allowing consumers to scan food items and view origin processing steps transportation path cutting or packaging location and safety certifications,"
+"Food supply chain databases production records logistics tracking data certification records from farms factories and distributors,Identify weak points in supply chains detect sources of contamination improve transparency and help consumers understand how food moves from farm to store,"
+Information Architecture Data Science Information Management Supply Chain Analytics
+
+
+
+2. Food safety rating system(MISM Specialization: Data Science)
+"Standardized food safety rating system managed by a unified regulatory platform that evaluates each product using color levels such as green yellow orange red based on additive usage safety inspections and health standards,"
+"Government inspection data laboratory testing results additive records nutrition databases and compliance reports,Generate comparable indicators of food quality reveal patterns of unsafe additives identify high risk producers and support evidence based regulatory decisions,"
+Data Science Policy Governance Information Management Risk Analysis
+
+
+
+3. Food health information moblie app (MISM Specialization: Data science)
+"Food health information mobile app that provides nearby food safety alerts news and personalized warnings if scanned foods are later linked to contamination issues users can also explore company profiles product origins and health ratings,"
+"Food safety news feeds recall databases user scan history geographic location data company transparency reports,Detect trends in food safety incidents identify regional risk patterns enable early alerts and improve consumer awareness through personalized information delivery,"
+Data Science User Experience Information Management Product Management
