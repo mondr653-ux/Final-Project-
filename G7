@@ -1,0 +1,141 @@
+-- Existing information structure -- 
+{
+  "structure_name": "GS1 Digital Link",
+  "source_link": "https://www.gs1.org/standards/gs1-digital-link",
+  "data_format": "URI encoded in a QR code or 2D barcode",
+  "access_method": "Consumer scans the QR code or 2D barcode to access product-linked web information",
+  "sample_uri": "https://example-food-brand.com/01/00012345678905/10/BATCH20260508?17=260520",
+  "parsed_identifiers": {
+    "gtin": "00012345678905",
+    "batch_or_lot_number": "BATCH20260508",
+    "expiration_date": "2026-05-20"
+  },
+  "linked_web_resources": {
+    "product_landing_page": "https://example-food-brand.com/products/fresh-chicken-breast",
+    "label_information_page": "https://example-food-brand.com/products/fresh-chicken-breast/label",
+    "nutrition_information_page": "https://example-food-brand.com/products/fresh-chicken-breast/nutrition"
+  },
+  "observed_limitations_for_our_project": {
+    "origin_location_available": false,
+    "processing_facility_available": false,
+    "processing_steps_available": false,
+    "inspection_status_available": false,
+    "inspection_date_available": false,
+    "recall_status_available": false,
+    "verification_status_available": false,
+    "public_private_access_control_available": false,
+    "change_log_available": false
+  }
+}
+
+-- improved information structure -- 
+{
+  "structure_name": "QR-Code-Based Food Safety Record",
+  "source_structure_extended_from": "GS1 Digital Link",
+  
+  "record_metadata": {
+    "schema_version": "1.1",
+    "record_id": "FSQR-2026-0001",
+    "created_date": "2026-05-01T09:00:00Z",
+    "last_updated": "2026-05-12T15:30:00Z",
+    "data_source": "Supplier record, inspection record, and recall database",
+    "verification_status": "verified"
+  },
+  
+  "product_identifier": {
+    "product_id": "PROD-CHICKEN-001",
+    "gtin": "00012345678905",
+    "batch_id": "BATCH20260508",
+    "qr_code_id": "QR-CHICKEN-001-A",
+    "product_name": "Fresh Chicken Breast",
+    "brand_name": "Green Farm Foods",
+    "food_category": "Meat",
+    "package_weight": "1.5 lb",
+    "expiration_date": "2026-05-20T23:59:59Z"
+  },
+  
+  "supply_chain_information": {
+    "origin_location": "Yakima County, WA",
+    "supplier_name": "Green Farm Foods Inc.",
+    "farm_or_source_id": "FARM-WA-2245",
+    "processing_facility": "Green Farm Processing Center",
+    "processing_facility_id": "FAC-WA-1102",
+    "processing_steps": [
+      {
+        "step_name": "Harvesting",
+        "step_date": "2026-05-08T08:00:00Z",
+        "location": "Yakima County, WA"
+      },
+      {
+        "step_name": "Cutting and packaging",
+        "step_date": "2026-05-09T14:30:00Z",
+        "location": "Seattle, WA"
+      },
+      {
+        "step_name": "Cold storage delivery",
+        "step_date": "2026-05-10T06:15:00Z",
+        "location": "Seattle Distribution Center"
+      }
+    ]
+  },
+  
+  "safety_and_quality_information": {
+    "inspection_status": "passed",
+    "inspection_date": "2026-05-09T10:00:00Z",
+    "inspecting_agency": "Washington State Department of Agriculture",
+    "temperature_control_status": "within safe range",
+    "storage_temperature_celsius": 2.5,
+    "quality_score": 95,
+    "allergen_info": [
+      {
+        "allergen_name": "None listed",
+        "allergen_risk": "low"
+      }
+    ]
+  },
+  
+  "recall_information": {
+    "recall_status": "none",
+    "recall_id": null,
+    "recall_reason": null,
+    "risk_level": "none",
+    "last_recall_check": "2026-05-12T15:00:00Z"
+  },
+
+  "system_and_security_metadata": {
+    "data_classification": "public_with_restricted_logs",
+    "encryption_status": "Encrypted-At-Rest",
+    
+    "consumer_access_view": {
+      "access_method": "QR code scan",
+      "access_level": "read_only",
+      "public_fields": [
+        "product_name",
+        "brand_name",
+        "gtin",
+        "batch_id",
+        "origin_location",
+        "processing_steps",
+        "inspection_status",
+        "inspection_date",
+        "allergen_info",
+        "expiration_date",
+        "recall_status",
+        "last_updated"
+      ]
+    },
+    
+    "backend_access_control": {
+      "permissions": {
+        "supplier_access": "update_own_product_records",
+        "regulator_access": "verify_and_update_inspection_or_recall_records",
+        "consumer_access": "read_public_safety_information"
+      },
+      "audit_tracking": {
+        "last_updated_by": "regulator_admin_01",
+        "last_update_time": "2026-05-12T15:30:00Z",
+        "change_log_enabled": true
+      }
+    }
+  }
+}
