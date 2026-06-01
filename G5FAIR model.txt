@@ -1,0 +1,24 @@
+﻿TEAM R & J:  Raymond Xu, Jihan Yang 
+
+
+
+
+Our food safety information structure supports the FAIR model.
+
+
+FAIR model: 
+
+
+F: Our food safety information structure supports Findability (F1, F2, F3) by assigning each food product or batch a unique `product_id` or `batch_id` connected to a QR code, and by using metadata that clearly describes the related food safety record.
+
+
+It also supports Findability and Reusability (F2, F4, R1) because each record includes searchable and relevant metadata such as product name, food category, origin farm or supplier, processing location, inspection date, update time, and recall status.
+
+
+A:  The structure supports Accessibility (A1, A1.1, A1.2) because users can retrieve the information by scanning the QR code through a standard web or app-based interface, while more sensitive supplier or regulator data can still require authentication when necessary.
+
+
+I:  It supports Interoperability (I1, I3) by storing the data in a structured format such as JSON with consistent fields like `product_id`, `batch_id`, `origin`, `processing_steps`, `inspection_record`, and `recall_status`, allowing different food companies, regulators, and consumer apps to exchange information more easily.
+
+
+R:  it supports Reusability (R1.1, R1.2, R1.3) by recording provenance, including where the food came from, who updated the record, when the inspection happened, and whether the data came from a government recall source or supplier report; however, the project would still need a clearer data usage license and stronger food-safety standards to fully meet FAIR expectations.
