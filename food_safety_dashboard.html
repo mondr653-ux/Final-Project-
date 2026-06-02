@@ -1,0 +1,376 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+h2.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+body{font-family:var(--font-sans)}
+.top-bar{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.25rem;border-bottom:0.5px solid var(--color-border-tertiary)}
+.top-bar h1{font-size:15px;font-weight:500;color:var(--color-text-primary)}
+.top-bar span{font-size:12px;color:var(--color-text-secondary)}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:1rem 1.25rem}
+.metric{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.75rem 1rem}
+.metric-label{font-size:11px;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.metric-value{font-size:22px;font-weight:500;color:var(--color-text-primary)}
+.metric-value.danger{color:var(--color-text-danger)}
+.metric-value.warn{color:var(--color-text-warning)}
+.metric-value.ok{color:var(--color-text-success)}
+.section{padding:.5rem 1.25rem 1rem}
+.section-title{font-size:11px;font-weight:500;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.75rem;display:flex;align-items:center;gap:8px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden;transition:border-color .15s}
+.card:hover{border-color:var(--color-border-secondary)}
+.card.recall{border-color:var(--color-border-danger);border-width:1.5px}
+.card-head{padding:.875rem 1rem .75rem;border-bottom:0.5px solid var(--color-border-tertiary)}
+.card-head-row{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.card-name{font-size:13px;font-weight:500;color:var(--color-text-primary);line-height:1.35}
+.badges{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px}
+.badge{font-size:10px;padding:2px 7px;border-radius:20px;font-weight:500;white-space:nowrap}
+.badge.recall{background:var(--color-background-danger);color:var(--color-text-danger)}
+.badge.safe{background:var(--color-background-success);color:var(--color-text-success)}
+.badge.warn{background:var(--color-background-warning);color:var(--color-text-warning)}
+.badge.info{background:var(--color-background-info);color:var(--color-text-info)}
+.badge.neutral{background:var(--color-background-secondary);color:var(--color-text-secondary)}
+.card-body{padding:.75rem 1rem}
+.row{display:flex;align-items:baseline;justify-content:space-between;padding:4px 0;border-bottom:0.5px solid var(--color-border-tertiary);font-size:12px}
+.row:last-child{border-bottom:none}
+.row-label{color:var(--color-text-secondary);display:flex;align-items:center;gap:5px}
+.row-val{color:var(--color-text-primary);font-weight:500;text-align:right;max-width:55%}
+.row-val.danger{color:var(--color-text-danger)}
+.row-val.warn{color:var(--color-text-warning)}
+.steps-list{margin-top:6px;padding-left:0;list-style:none}
+.steps-list li{font-size:11px;color:var(--color-text-secondary);padding:3px 0;border-bottom:0.5px solid var(--color-border-tertiary);display:flex;align-items:flex-start;gap:6px}
+.steps-list li:last-child{border-bottom:none}
+.step-num{font-size:10px;font-weight:500;color:var(--color-text-tertiary);min-width:14px}
+.allergen-tag{font-size:10px;background:var(--color-background-danger);color:var(--color-text-danger);padding:1px 7px;border-radius:10px}
+.scan-bar{padding:.75rem 1rem 1rem}
+.scan-input-wrap{display:flex;gap:8px}
+.scan-input-wrap input{flex:1;font-size:13px}
+.scan-result{margin-top:10px;padding:.75rem 1rem;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-tertiary);font-size:12px;color:var(--color-text-primary);display:none}
+.scan-result.active{display:block}
+.scan-result.danger{border-color:var(--color-border-danger);background:var(--color-background-danger)}
+.scan-result.ok{border-color:var(--color-border-success);background:var(--color-background-success)}
+.scan-result.warn{border-color:var(--color-border-warning);background:var(--color-background-warning)}
+.recall-banner{background:var(--color-background-danger);border:0.5px solid var(--color-border-danger);border-radius:var(--border-radius-md);padding:.75rem 1rem;margin-bottom:10px;font-size:12px;color:var(--color-text-danger);display:flex;align-items:flex-start;gap:8px}
+.recall-banner i{font-size:16px;flex-shrink:0;margin-top:1px}
+.recall-text{line-height:1.5}
+.recall-text strong{display:block;font-size:13px;margin-bottom:2px}
+.divider{height:0.5px;background:var(--color-border-tertiary);margin:0 1.25rem}
+.status-dot{width:7px;height:7px;border-radius:50%;display:inline-block;flex-shrink:0}
+.dot-ok{background:var(--color-text-success)}
+.dot-warn{background:var(--color-text-warning)}
+.dot-danger{background:var(--color-text-danger)}
+.dot-info{background:var(--color-text-info)}
+.section-tabs{display:flex;gap:4px;margin-bottom:.75rem}
+.tab-btn{font-size:11px;padding:4px 10px;border-radius:20px;border:0.5px solid var(--color-border-secondary);background:transparent;color:var(--color-text-secondary);cursor:pointer}
+.tab-btn.active{background:var(--color-background-info);color:var(--color-text-info);border-color:var(--color-border-info)}
+.expiry-bar{height:4px;border-radius:2px;margin-top:4px;background:var(--color-background-secondary)}
+.expiry-fill{height:4px;border-radius:2px}
+</style>
+
+<h2 class="sr-only">Food safety product dashboard showing 4 products with recall status, inspection data, traceability, and nutrition information</h2>
+
+<div class="top-bar">
+  <h1><i class="ti ti-shield-check" aria-hidden="true" style="font-size:15px;margin-right:6px;vertical-align:-2px"></i>Food safety dashboard</h1>
+  <span id="db-time">Loaded from export_all_products.json</span>
+</div>
+
+<div class="metrics">
+  <div class="metric">
+    <div class="metric-label">Total products</div>
+    <div class="metric-value" id="m-total">4</div>
+  </div>
+  <div class="metric">
+    <div class="metric-label">Recalls active</div>
+    <div class="metric-value danger" id="m-recall">1</div>
+  </div>
+  <div class="metric">
+    <div class="metric-label">Inspections passed</div>
+    <div class="metric-value ok" id="m-inspect">4 / 4</div>
+  </div>
+  <div class="metric">
+    <div class="metric-label">Expiring ≤ 10 days</div>
+    <div class="metric-value warn" id="m-expiry">—</div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<div class="scan-bar">
+  <div class="section-title"><i class="ti ti-qrcode" aria-hidden="true" style="font-size:14px"></i>Quick product lookup</div>
+  <div class="scan-input-wrap">
+    <input type="text" id="scan-in" placeholder="Enter product ID, GTIN, or batch…" aria-label="Product search" oninput="runScan(this.value)">
+    <button onclick="runScan(document.getElementById('scan-in').value)">Lookup ↗</button>
+  </div>
+  <div class="scan-result" id="scan-out" role="status" aria-live="polite"></div>
+</div>
+
+<div class="divider"></div>
+
+<div class="section">
+  <div class="section-title">
+    <i class="ti ti-package" aria-hidden="true" style="font-size:14px"></i>
+    Products
+    <span style="margin-left:auto;font-weight:400;letter-spacing:0">
+      <span class="section-tabs" id="filter-tabs">
+        <button class="tab-btn active" onclick="filterCards('all',this)">All</button>
+        <button class="tab-btn" onclick="filterCards('recall',this)">Recalls</button>
+        <button class="tab-btn" onclick="filterCards('safe',this)">Safe</button>
+      </span>
+    </span>
+  </div>
+  <div class="cards" id="cards-grid"></div>
+</div>
+
+<script>
+const DB = {
+  "132881C9545D": {
+    "product_id": "132881C9545D",
+    "gtin": "00012345678905",
+    "batch_lot": "BATCH20260508",
+    "expiration_date": "2026-06-15",
+    "product_name": "Organic Baby Spinach 5oz",
+    "nutrition_info": {"serving_size":"85g (3oz)","calories":20,"total_fat":"0g","sodium":"65mg","carbohydrates":"3g","protein":"2g","vitamin_a":"160% DV","vitamin_c":"20% DV","iron":"6% DV"},
+    "allergens": [],
+    "origin_country": "USA",
+    "origin_farm_or_facility": "Green Valley Farms, Salinas CA",
+    "processing_facility": "FreshPack Processing, Watsonville CA",
+    "processing_steps": ["Harvested by machine (May 8, 2026)","Transferred to refrigerated transport (4°C)","Triple-washed with chlorinated water","Dried via air centrifuge","Inspected and packaged","Cold-chain storage (-1°C to 4°C)"],
+    "inspection_status": "passed",
+    "inspection_date": "2026-05-09",
+    "inspector_name": "USDA Inspector J. Rivera",
+    "recall_status": "voluntary",
+    "recall_reason": "Potential Listeria contamination detected in processing facility",
+    "recall_initiated_at": "2026-06-01T19:13:28.561904",
+    "verification_status": "under_review",
+    "verified_by": "supply_chain_manager",
+    "access_level": "public",
+    "schema_version": "1.0"
+  },
+  "400734515EB5": {
+    "product_id": "400734515EB5",
+    "gtin": "00098765432100",
+    "batch_lot": "LOT20260510A",
+    "expiration_date": "2026-06-20",
+    "product_name": "Cherry Tomatoes 1lb",
+    "nutrition_info": {},
+    "allergens": [],
+    "origin_country": "Mexico",
+    "origin_farm_or_facility": "Agro Fresh, Sinaloa",
+    "processing_facility": "BorderFresh Packing, El Paso TX",
+    "processing_steps": ["Harvested","Sorted by size","Washed","Packaged"],
+    "inspection_status": "passed",
+    "inspection_date": "2026-05-11",
+    "inspector_name": "FDA Inspector K. Lopez",
+    "recall_status": "none",
+    "recall_reason": "",
+    "recall_initiated_at": "",
+    "verification_status": "verified",
+    "verified_by": "system",
+    "access_level": "public",
+    "schema_version": "1.0"
+  },
+  "C5580736C44C": {
+    "product_id": "C5580736C44C",
+    "gtin": "00011223344550",
+    "batch_lot": "EGG20260508",
+    "expiration_date": "2026-06-28",
+    "product_name": "Free-Range Eggs 12ct",
+    "nutrition_info": {},
+    "allergens": ["eggs"],
+    "origin_country": "USA",
+    "origin_farm_or_facility": "Sunrise Pastures, Petaluma CA",
+    "processing_facility": "Sunrise Pastures On-Site Packing",
+    "processing_steps": ["Collected","Candled & graded","Washed","Refrigerated","Packed"],
+    "inspection_status": "passed",
+    "inspection_date": "2026-05-09",
+    "inspector_name": "USDA Inspector T. Williams",
+    "recall_status": "none",
+    "recall_reason": "",
+    "recall_initiated_at": "",
+    "verification_status": "verified",
+    "verified_by": "system",
+    "access_level": "public",
+    "schema_version": "1.0"
+  },
+  "C5DA6AEA26EA": {
+    "product_id": "C5DA6AEA26EA",
+    "gtin": "00033445566770",
+    "batch_lot": "MILK20260509B",
+    "expiration_date": "2026-06-10",
+    "product_name": "Whole Milk Gallon",
+    "nutrition_info": {},
+    "allergens": ["dairy"],
+    "origin_country": "USA",
+    "origin_farm_or_facility": "Heritage Dairy, Twin Falls ID",
+    "processing_facility": "Pacific Dairy Plant, Boise ID",
+    "processing_steps": ["Collected","Pasteurized (HTST)","Homogenized","Fortified (Vit D)","Packaged"],
+    "inspection_status": "passed",
+    "inspection_date": "2026-05-10",
+    "inspector_name": "State Dairy Inspector R. Patel",
+    "recall_status": "none",
+    "recall_reason": "",
+    "recall_initiated_at": "",
+    "verification_status": "verified",
+    "verified_by": "system",
+    "access_level": "public",
+    "schema_version": "1.0"
+  }
+};
+
+const TODAY = new Date("2026-06-01");
+
+function daysLeft(expStr){
+  const exp = new Date(expStr);
+  return Math.round((exp - TODAY)/(1000*60*60*24));
+}
+
+function expiryClass(d){
+  if(d < 0) return 'danger';
+  if(d <= 5) return 'warn';
+  if(d <= 10) return 'warn';
+  return '';
+}
+
+function expiryLabel(d){
+  if(d < 0) return `Expired ${Math.abs(d)}d ago`;
+  if(d === 0) return 'Expires today';
+  return `${d} days left`;
+}
+
+function formatDate(s){
+  if(!s) return '—';
+  return s.slice(0,10);
+}
+
+function verBadge(v){
+  const map = {verified:'safe',under_review:'warn'};
+  return map[v]||'neutral';
+}
+
+function buildCard(p){
+  const d = daysLeft(p.expiration_date);
+  const isRecall = p.recall_status !== 'none';
+  const ec = expiryClass(d);
+
+  const stepsHtml = p.processing_steps.map((s,i)=>
+    `<li><span class="step-num">${i+1}</span>${s}</li>`
+  ).join('');
+
+  const allergenHtml = p.allergens.length
+    ? p.allergens.map(a=>`<span class="allergen-tag">${a}</span>`).join(' ')
+    : `<span style="font-size:11px;color:var(--color-text-secondary)">None declared</span>`;
+
+  const recallBlock = isRecall ? `
+    <div class="recall-banner">
+      <i class="ti ti-alert-triangle" aria-hidden="true"></i>
+      <div class="recall-text">
+        <strong>${p.recall_status === 'voluntary' ? 'Voluntary recall' : 'Mandatory recall'} in effect</strong>
+        ${p.recall_reason}
+        <div style="margin-top:4px;font-size:10px;color:var(--color-text-danger)">Initiated: ${formatDate(p.recall_initiated_at)}</div>
+      </div>
+    </div>` : '';
+
+  const nutrRows = Object.entries(p.nutrition_info).map(([k,v])=>
+    `<div class="row"><span class="row-label">${k.replace(/_/g,' ')}</span><span class="row-val">${v}</span></div>`
+  ).join('') || `<div style="font-size:11px;color:var(--color-text-tertiary);padding:4px 0">Not provided</div>`;
+
+  const expiryBarFill = Math.min(100, Math.max(0, d <= 0 ? 100 : d >= 30 ? 0 : 100 - Math.round(d/30*100)));
+  const barColor = ec === 'danger' ? 'var(--color-text-danger)' : ec === 'warn' ? 'var(--color-text-warning)' : 'var(--color-text-success)';
+
+  return `
+    <div class="card${isRecall?' recall':''}" data-id="${p.product_id}" data-recall="${isRecall?'1':'0'}">
+      <div class="card-head">
+        <div class="card-head-row">
+          <span class="card-name">${p.product_name}</span>
+          <span class="status-dot ${isRecall?'dot-danger':ec==='warn'?'dot-warn':'dot-ok'}" title="${isRecall?'Recall active':ec?'Check expiry':'Safe'}"></span>
+        </div>
+        <div class="badges">
+          ${isRecall ? `<span class="badge recall"><i class="ti ti-alert-triangle" aria-hidden="true"></i> Recall</span>` : `<span class="badge safe"><i class="ti ti-check" aria-hidden="true"></i> Safe</span>`}
+          ${ec ? `<span class="badge ${ec}"><i class="ti ti-calendar-x" aria-hidden="true"></i> ${expiryLabel(d)}</span>` : `<span class="badge neutral"><i class="ti ti-calendar" aria-hidden="true"></i> ${expiryLabel(d)}</span>`}
+          ${p.allergens.length ? `<span class="badge warn"><i class="ti ti-alert-circle" aria-hidden="true"></i> Allergens</span>` : ''}
+          <span class="badge ${verBadge(p.verification_status)}">${p.verification_status.replace('_',' ')}</span>
+        </div>
+      </div>
+      <div class="card-body">
+        ${recallBlock}
+        <div class="row"><span class="row-label"><i class="ti ti-barcode" aria-hidden="true"></i> GTIN</span><span class="row-val">${p.gtin}</span></div>
+        <div class="row"><span class="row-label"><i class="ti ti-tag" aria-hidden="true"></i> Batch / lot</span><span class="row-val">${p.batch_lot}</span></div>
+        <div class="row"><span class="row-label"><i class="ti ti-calendar-event" aria-hidden="true"></i> Expires</span><span class="row-val ${ec}">${p.expiration_date}</span></div>
+        <div class="expiry-bar"><div class="expiry-fill" style="width:${expiryBarFill}%;background:${barColor}"></div></div>
+        <div style="height:8px"></div>
+        <div class="row"><span class="row-label"><i class="ti ti-map-pin" aria-hidden="true"></i> Origin</span><span class="row-val">${p.origin_country}</span></div>
+        <div class="row"><span class="row-label"><i class="ti ti-building" aria-hidden="true"></i> Source farm</span><span class="row-val" style="font-size:11px">${p.origin_farm_or_facility}</span></div>
+        <div class="row"><span class="row-label"><i class="ti ti-building-factory" aria-hidden="true"></i> Processing</span><span class="row-val" style="font-size:11px">${p.processing_facility}</span></div>
+        <div class="row"><span class="row-label"><i class="ti ti-clipboard-check" aria-hidden="true"></i> Inspector</span><span class="row-val" style="font-size:11px">${p.inspector_name}</span></div>
+        <div class="row"><span class="row-label"><i class="ti ti-calendar-check" aria-hidden="true"></i> Inspected</span><span class="row-val">${p.inspection_date}</span></div>
+        <div style="height:8px"></div>
+        <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:4px;font-weight:500">Processing chain</div>
+        <ul class="steps-list">${stepsHtml}</ul>
+        <div style="height:8px"></div>
+        <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:4px;font-weight:500">Allergens</div>
+        <div>${allergenHtml}</div>
+        ${Object.keys(p.nutrition_info).length ? `
+        <div style="height:8px"></div>
+        <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:4px;font-weight:500">Nutrition</div>
+        ${nutrRows}` : ''}
+        <div style="height:8px"></div>
+        <div style="font-size:10px;color:var(--color-text-tertiary)">ID: ${p.product_id} · Schema v${p.schema_version}</div>
+      </div>
+    </div>`;
+}
+
+function renderCards(filter='all'){
+  const grid = document.getElementById('cards-grid');
+  let html = '';
+  let expCount = 0;
+  for(const p of Object.values(DB)){
+    const d = daysLeft(p.expiration_date);
+    if(d <= 10) expCount++;
+    if(filter === 'recall' && p.recall_status === 'none') continue;
+    if(filter === 'safe' && p.recall_status !== 'none') continue;
+    html += buildCard(p);
+  }
+  grid.innerHTML = html || `<div style="font-size:13px;color:var(--color-text-secondary);padding:.5rem 0">No products match this filter.</div>`;
+  document.getElementById('m-expiry').textContent = expCount > 0 ? expCount : '0';
+  if(expCount > 0) document.getElementById('m-expiry').className = 'metric-value warn';
+  else document.getElementById('m-expiry').className = 'metric-value ok';
+}
+
+function filterCards(f, btn){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderCards(f);
+}
+
+function runScan(q){
+  q = (q||'').trim().toUpperCase();
+  const out = document.getElementById('scan-out');
+  if(!q){ out.className='scan-result'; out.innerHTML=''; return; }
+  let found = null;
+  for(const p of Object.values(DB)){
+    if(p.product_id === q || p.gtin.includes(q) || p.batch_lot.toUpperCase() === q || p.product_name.toUpperCase().includes(q)){
+      found = p; break;
+    }
+  }
+  if(!found){
+    out.className='scan-result active warn';
+    out.innerHTML=`<strong>No match found</strong> — check the product ID, GTIN, or batch number.`;
+    return;
+  }
+  const d = daysLeft(found.expiration_date);
+  if(found.recall_status !== 'none'){
+    out.className='scan-result active danger';
+    out.innerHTML=`<strong><i class="ti ti-alert-triangle" aria-hidden="true"></i> RECALL — ${found.product_name}</strong><br>
+      Type: ${found.recall_status} &nbsp;·&nbsp; Reason: ${found.recall_reason}<br>
+      <span style="font-size:11px">ID: ${found.product_id}</span>`;
+  } else if(d < 0){
+    out.className='scan-result active danger';
+    out.innerHTML=`<strong>${found.product_name}</strong> — <span style="color:var(--color-text-danger)">Expired ${Math.abs(d)} day(s) ago.</span> Do not consume.<br><span style="font-size:11px">ID: ${found.product_id} · Expires: ${found.expiration_date}</span>`;
+  } else {
+    out.className='scan-result active ok';
+    out.innerHTML=`<strong><i class="ti ti-check" aria-hidden="true"></i> ${found.product_name}</strong> — Safe. Inspection: ${found.inspection_status}. Expires in ${d} day(s).<br><span style="font-size:11px">ID: ${found.product_id} · Batch: ${found.batch_lot} · ${found.origin_country}</span>`;
+  }
+}
+
+renderCards();
+document.getElementById('db-time').textContent = `${Object.keys(DB).length} products · June 1, 2026`;
+</script>
