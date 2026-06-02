@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QR-Code Food Safety Dashboard</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; background: #f5f7fb; color: #111; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 32px 20px; }
+    h1 { margin-bottom: 6px; font-size: 32px; color: #111; }
+    .subtitle { color: #222; line-height: 1.5; margin-bottom: 24px; }
+    .metric-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 24px; }
+    .metric-card { background: white; border: 1px solid #ddd; border-radius: 14px; padding: 16px; }
+    .metric-label { color: #222; font-size: 14px; }
+    .metric-value { color: #111; font-size: 30px; font-weight: 700; margin-top: 6px; }
+    .page-tabs { display: flex; gap: 10px; margin-bottom: 18px; }
+    .tab-button { padding: 10px 16px; border: 1px solid #bbb; background: white; border-radius: 8px; cursor: pointer; font-weight: 700; color: #111; }
+    .active-tab { background: #111; color: white; }
+    .controls { display: flex; gap: 12px; margin-bottom: 18px; }
+    input, select, button { padding: 10px; border: 1px solid #bbb; border-radius: 8px; font-size: 14px; color: #111; background: white; }
+    input { flex: 1; }
+    .overview-card, .product-card, .test-card { background: white; border: 1px solid #ddd; border-radius: 16px; padding: 20px; margin-bottom: 18px; color: #111; }
+    .overview-title, .product-title, .test-title { font-size: 24px; font-weight: 700; margin-bottom: 8px; color: #111; }
+    .overview-description, .product-meta, .test-description { color: #222; line-height: 1.5; margin-bottom: 14px; }
+    .overview-table, .info-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    .overview-table th { background: #f1f3f4; color: #111; text-align: left; padding: 10px; border-bottom: 1px solid #ddd; }
+    .overview-table td, .info-table td { padding: 10px; border-bottom: 1px solid #eee; color: #111; vertical-align: top; }
+    .overview-table tr:hover { background: #f8f9fa; cursor: pointer; }
+    .info-table td:first-child { font-weight: 700; width: 220px; color: #000; }
+    .badge, .status-qualified, .status-not-qualified, .status-review { padding: 5px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; margin-right: 6px; display: inline-block; }
+    .success, .status-qualified { background: #e6f4ea; color: #137333; }
+    .warning, .status-review { background: #fff4e5; color: #b06000; }
+    .danger, .status-not-qualified { background: #fce8e6; color: #c5221f; }
+    .notice { border-left: 5px solid #c5221f; background: #fce8e6; color: #111; padding: 12px; margin-top: 12px; border-radius: 8px; }
+    .good-notice { border-left: 5px solid #137333; background: #e6f4ea; color: #111; padding: 12px; margin-top: 12px; border-radius: 8px; }
+    ol { padding-left: 22px; line-height: 1.6; color: #111; }
+    pre { background: #f6f8fa; color: #111; padding: 12px; border-radius: 10px; overflow: auto; white-space: pre-wrap; word-wrap: break-word; }
+    .export-button { cursor: pointer; font-weight: 700; background: #111; color: white; }
+    .summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 12px; }
+    .summary-box { background: #f8f9fa; border: 1px solid #eee; border-radius: 12px; padding: 12px; color: #111; }
+    @media (max-width: 900px) {
+      .metric-grid, .summary-grid { grid-template-columns: repeat(2, 1fr); }
+      .controls { flex-direction: column; }
+    }
+    @media (max-width: 600px) {
+      .metric-grid, .summary-grid { grid-template-columns: 1fr; }
+      .overview-table { font-size: 12px; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>QR-Code Food Safety Portable Information Dashboard</h1>
+    <p class="subtitle">
+      This prototype restructures food safety, recall, inspection, and supply-chain information into a portable QR-code-based information product.
+      Consumers can access a filtered public view, while regulators can review the full structured record for audit and verification.
+    </p>
+
+    <div class="metric-grid">
+      <div class="metric-card"><div class="metric-label">Total Products</div><div class="metric-value" id="totalProducts">0</div></div>
+      <div class="metric-card"><div class="metric-label">Active Recalls</div><div class="metric-value" id="activeRecalls">0</div></div>
+      <div class="metric-card"><div class="metric-label">Inspections Passed</div><div class="metric-value" id="passedInspections">0</div></div>
+      <div class="metric-card"><div class="metric-label">Expiring ≤ 10 Days</div><div class="metric-value" id="expiringSoon">0</div></div>
+    </div>
+
+    <div class="page-tabs">
+      <button id="overviewTab" class="tab-button active-tab">All Records Overview</button>
+      <button id="detailTab" class="tab-button">Product Detail</button>
+      <button id="qualityTab" class="tab-button">Quality & Performance</button>
+    </div>
+
+    <div class="controls">
+      <input id="searchInput" type="text" placeholder="Search product name, batch ID, category, origin, recall status, or inspection status" />
+      <select id="roleSelect">
+        <option value="consumer">Consumer View</option>
+        <option value="regulator">Regulator View</option>
+      </select>
+      <select id="productSelect"></select>
+      <button class="export-button" onclick="downloadConsumerJSON()">Export JSON</button>
+    </div>
+
+    <div id="overviewPage"></div>
+    <div id="productOutput"></div>
+    <div id="qualityPage"></div>
+  </div>
+
+  <script>
+    const products = [
+      {
+        "product_identifier": {"product_name": "Organic Chicken Breast", "brand_name": "FreshFarm", "gtin": "00012345678905", "batch_id": "CH-BATCH-001", "qr_code_id": "QR-CH-001", "food_category": "Meat", "expiration_date": "2026-06-10"},
+        "supply_chain_information": {"origin_location": "Yakima County, WA", "processing_steps": [{"step_name": "Farm Origin", "location": "Yakima County, WA", "step_date": "2026-05-20"}, {"step_name": "Processing Facility", "location": "Seattle, WA", "step_date": "2026-05-22"}, {"step_name": "Retail Distribution", "location": "Seattle Retail Store", "step_date": "2026-05-25"}]},
+        "safety_and_quality_information": {"inspection_status": "Passed", "inspection_date": "2026-05-24", "quality_score": 95, "temperature_control_status": "Compliant", "allergen_warning": "None"},
+        "recall_information": {"recall_status": "None", "risk_level": "Low", "last_recall_check": "2026-05-26"},
+        "record_metadata": {"record_id": "REC-001", "last_updated": "2026-05-25T10:00:00Z", "source_system": "Supplier Safety Database", "access_level": "public_consumer"},
+        "security_metadata": {"digital_signature": "SIG-CH-001", "verified_domain": "freshfarm.example.org", "audit_log_id": "AUDIT-001"}
+      },
+      {
+        "product_identifier": {"product_name": "Packaged Spinach", "brand_name": "Green Valley", "gtin": "00098765432109", "batch_id": "SP-BATCH-002", "qr_code_id": "QR-SP-002", "food_category": "Vegetable", "expiration_date": "2026-06-08"},
+        "supply_chain_information": {"origin_location": "Salinas, CA", "processing_steps": [{"step_name": "Farm Origin", "location": "Salinas, CA", "step_date": "2026-05-18"}, {"step_name": "Washing and Packaging", "location": "Fresno, CA", "step_date": "2026-05-20"}, {"step_name": "Distribution Center", "location": "Portland, OR", "step_date": "2026-05-22"}]},
+        "safety_and_quality_information": {"inspection_status": "Passed", "inspection_date": "2026-05-21", "quality_score": 89, "temperature_control_status": "Compliant", "allergen_warning": "None"},
+        "recall_information": {"recall_status": "Active", "risk_level": "High", "last_recall_check": "2026-05-26", "recall_reason": "Possible contamination risk detected during routine monitoring."},
+        "record_metadata": {"record_id": "REC-002", "last_updated": "2026-05-26T09:30:00Z", "source_system": "Federal Recall Feed", "access_level": "public_consumer"},
+        "security_metadata": {"digital_signature": "SIG-SP-002", "verified_domain": "greenvalley.example.org", "audit_log_id": "AUDIT-002"}
+      },
+      {
+        "product_identifier": {"product_name": "Fresh Strawberries", "brand_name": "BerrySafe", "gtin": "00055555555555", "batch_id": "ST-BATCH-003", "qr_code_id": "QR-ST-003", "food_category": "Fruit", "expiration_date": "2026-06-06"},
+        "supply_chain_information": {"origin_location": "Watsonville, CA", "processing_steps": [{"step_name": "Farm Origin", "location": "Watsonville, CA", "step_date": "2026-05-23"}, {"step_name": "Cold Storage", "location": "Oakland, CA", "step_date": "2026-05-24"}, {"step_name": "Retail Delivery", "location": "Seattle, WA", "step_date": "2026-05-26"}]},
+        "safety_and_quality_information": {"inspection_status": "Passed", "inspection_date": "2026-05-25", "quality_score": 92, "temperature_control_status": "Compliant", "allergen_warning": "None"},
+        "recall_information": {"recall_status": "None", "risk_level": "Low", "last_recall_check": "2026-05-26"},
+        "record_metadata": {"record_id": "REC-003", "last_updated": "2026-05-26T12:00:00Z", "source_system": "State Agriculture Inspection Record", "access_level": "public_consumer"},
+        "security_metadata": {"digital_signature": "SIG-ST-003", "verified_domain": "berrysafe.example.org", "audit_log_id": "AUDIT-003"}
+      },
+      {
+        "product_identifier": {"product_name": "Whole Milk", "brand_name": "Northwest Dairy", "gtin": "00022222222222", "batch_id": "MK-BATCH-004", "qr_code_id": "QR-MK-004", "food_category": "Dairy", "expiration_date": "2026-06-12"},
+        "supply_chain_information": {"origin_location": "Bellingham, WA", "processing_steps": [{"step_name": "Dairy Farm", "location": "Bellingham, WA", "step_date": "2026-05-21"}, {"step_name": "Pasteurization", "location": "Everett, WA", "step_date": "2026-05-22"}, {"step_name": "Retail Distribution", "location": "Seattle, WA", "step_date": "2026-05-24"}]},
+        "safety_and_quality_information": {"inspection_status": "Passed", "inspection_date": "2026-05-23", "quality_score": 97, "temperature_control_status": "Compliant", "allergen_warning": "Contains milk"},
+        "recall_information": {"recall_status": "None", "risk_level": "Low", "last_recall_check": "2026-05-26"},
+        "record_metadata": {"record_id": "REC-004", "last_updated": "2026-05-26T08:00:00Z", "source_system": "Supplier Safety Database", "access_level": "public_consumer"},
+        "security_metadata": {"digital_signature": "SIG-MK-004", "verified_domain": "northwestdairy.example.org", "audit_log_id": "AUDIT-004"}
+      },
+      {
+        "product_identifier": {"product_name": "Frozen Salmon Fillet", "brand_name": "Pacific Catch", "gtin": "00033333333333", "batch_id": "FS-BATCH-005", "qr_code_id": "QR-FS-005", "food_category": "Seafood", "expiration_date": "2026-07-15"},
+        "supply_chain_information": {"origin_location": "Kodiak, AK", "processing_steps": [{"step_name": "Harvest Location", "location": "Kodiak, AK", "step_date": "2026-05-10"}, {"step_name": "Freezing Facility", "location": "Anchorage, AK", "step_date": "2026-05-12"}, {"step_name": "Cold Chain Shipping", "location": "Seattle, WA", "step_date": "2026-05-18"}]},
+        "safety_and_quality_information": {"inspection_status": "Passed", "inspection_date": "2026-05-19", "quality_score": 94, "temperature_control_status": "Compliant", "allergen_warning": "Contains fish"},
+        "recall_information": {"recall_status": "None", "risk_level": "Low", "last_recall_check": "2026-05-26"},
+        "record_metadata": {"record_id": "REC-005", "last_updated": "2026-05-26T11:15:00Z", "source_system": "Seafood Traceability Record", "access_level": "public_consumer"},
+        "security_metadata": {"digital_signature": "SIG-FS-005", "verified_domain": "pacificcatch.example.org", "audit_log_id": "AUDIT-005"}
+      },
+      {
+        "product_identifier": {"product_name": "Peanut Butter Cookies", "brand_name": "SweetBox Bakery", "gtin": "00044444444444", "batch_id": "PB-BATCH-006", "qr_code_id": "QR-PB-006", "food_category": "Bakery", "expiration_date": "2026-06-18"},
+        "supply_chain_information": {"origin_location": "Tacoma, WA", "processing_steps": [{"step_name": "Ingredient Receiving", "location": "Tacoma, WA", "step_date": "2026-05-20"}, {"step_name": "Baking", "location": "Tacoma, WA", "step_date": "2026-05-21"}, {"step_name": "Packaging", "location": "Tacoma, WA", "step_date": "2026-05-22"}]},
+        "safety_and_quality_information": {"inspection_status": "Passed", "inspection_date": "2026-05-22", "quality_score": 88, "temperature_control_status": "Not Required", "allergen_warning": "Contains peanuts, wheat, and eggs"},
+        "recall_information": {"recall_status": "Active", "risk_level": "High", "last_recall_check": "2026-05-26", "recall_reason": "Undeclared allergen label issue reported for a subset of packages."},
+        "record_metadata": {"record_id": "REC-006", "last_updated": "2026-05-26T13:20:00Z", "source_system": "Retail Recall Monitoring Feed", "access_level": "public_consumer"},
+        "security_metadata": {"digital_signature": "SIG-PB-006", "verified_domain": "sweetbox.example.org", "audit_log_id": "AUDIT-006"}
+      },
+      {
+        "product_identifier": {"product_name": "Organic Baby Carrots", "brand_name": "RootHarvest", "gtin": "00066666666666", "batch_id": "BC-BATCH-007", "qr_code_id": "QR-BC-007", "food_category": "Vegetable", "expiration_date": "2026-06-09"},
+        "supply_chain_information": {"origin_location": "Bakersfield, CA", "processing_steps": [{"step_name": "Farm Origin", "location": "Bakersfield, CA", "step_date": "2026-05-19"}, {"step_name": "Washing and Cutting", "location": "Sacramento, CA", "step_date": "2026-05-21"}, {"step_name": "Refrigerated Shipping", "location": "Seattle, WA", "step_date": "2026-05-24"}]},
+        "safety_and_quality_information": {"inspection_status": "Passed", "inspection_date": "2026-05-24", "quality_score": 91, "temperature_control_status": "Compliant", "allergen_warning": "None"},
+        "recall_information": {"recall_status": "None", "risk_level": "Low", "last_recall_check": "2026-05-26"},
+        "record_metadata": {"record_id": "REC-007", "last_updated": "2026-05-26T10:45:00Z", "source_system": "Supplier Safety Database", "access_level": "public_consumer"},
+        "security_metadata": {"digital_signature": "SIG-BC-007", "verified_domain": "rootharvest.example.org", "audit_log_id": "AUDIT-007"}
+      },
+      {
+        "product_identifier": {"product_name": "Ready-to-Eat Chicken Salad", "brand_name": "QuickFresh Meals", "gtin": "00077777777777", "batch_id": "CS-BATCH-008", "qr_code_id": "QR-CS-008", "food_category": "Prepared Food", "expiration_date": "2026-06-05"},
+        "supply_chain_information": {"origin_location": "Seattle, WA", "processing_steps": [{"step_name": "Ingredient Assembly", "location": "Seattle, WA", "step_date": "2026-05-24"}, {"step_name": "Cold Preparation", "location": "Seattle, WA", "step_date": "2026-05-25"}, {"step_name": "Retail Placement", "location": "Seattle, WA", "step_date": "2026-05-26"}]},
+        "safety_and_quality_information": {"inspection_status": "Failed", "inspection_date": "2026-05-26", "quality_score": 62, "temperature_control_status": "Temperature Excursion Detected", "allergen_warning": "Contains eggs"},
+        "recall_information": {"recall_status": "Active", "risk_level": "High", "last_recall_check": "2026-05-26", "recall_reason": "Temperature control failure detected during retail storage."},
+        "record_metadata": {"record_id": "REC-008", "last_updated": "2026-05-26T15:00:00Z", "source_system": "State Inspection Alert", "access_level": "public_consumer"},
+        "security_metadata": {"digital_signature": "SIG-CS-008", "verified_domain": "quickfresh.example.org", "audit_log_id": "AUDIT-008"}
+      }
+    ];
+
+    function normalizeProduct(record) {
+      const product = record.product_identifier || {};
+      const safety = record.safety_and_quality_information || {};
+      const recall = record.recall_information || {};
+      const supply = record.supply_chain_information || {};
+      const metadata = record.record_metadata || {};
+      return {
+        product_name: product.product_name || "",
+        brand_name: product.brand_name || "",
+        gtin: product.gtin || "",
+        batch_id: product.batch_id || "",
+        qr_code_id: product.qr_code_id || "",
+        category: product.food_category || "",
+        origin: supply.origin_location || "",
+        inspection_status: safety.inspection_status || "",
+        inspection_date: safety.inspection_date || "",
+        quality_score: safety.quality_score || "",
+        temperature_status: safety.temperature_control_status || "",
+        allergen_warning: safety.allergen_warning || "",
+        recall_status: recall.recall_status || "Unknown",
+        risk_level: recall.risk_level || "Unknown",
+        recall_reason: recall.recall_reason || "",
+        last_recall_check: recall.last_recall_check || "",
+        expiration_date: product.expiration_date || "",
+        last_updated: metadata.last_updated || "",
+        source_system: metadata.source_system || ""
+      };
+    }
+
+    function consumerView(record) { return normalizeProduct(record); }
+
+    function getFilteredProducts() {
+      const query = document.getElementById("searchInput").value.toLowerCase().trim();
+      return products.map((p, index) => ({ data: p, originalIndex: index })).filter(item => {
+        const p = normalizeProduct(item.data);
+        const searchable = [p.product_name, p.brand_name, p.batch_id, p.category, p.origin, p.recall_status, p.inspection_status, p.risk_level].join(" ").toLowerCase();
+        return searchable.includes(query);
+      });
+    }
+
+    function statusBadge(value, type) {
+      const text = String(value).toLowerCase();
+      if (type === "recall") {
+        if (["active", "yes", "recall"].includes(text)) return `<span class="badge danger">Active Recall</span>`;
+        if (["none", "no", "clear"].includes(text)) return `<span class="badge success">No Recall</span>`;
+        return `<span class="badge warning">Recall Unknown</span>`;
+      }
+      if (type === "inspection") {
+        if (["passed", "pass", "certified organic"].includes(text)) return `<span class="badge success">Inspection Passed</span>`;
+        if (["failed", "fail"].includes(text)) return `<span class="badge danger">Inspection Failed</span>`;
+        return `<span class="badge warning">Inspection Unknown</span>`;
+      }
+      if (type === "risk") {
+        if (["high", "critical"].includes(text)) return `<span class="badge danger">High Risk</span>`;
+        if (text === "medium") return `<span class="badge warning">Medium Risk</span>`;
+        if (text === "low") return `<span class="badge success">Low Risk</span>`;
+        return `<span class="badge warning">Risk Unknown</span>`;
+      }
+    }
+
+    function isExpiringSoon(dateString) {
+      if (!dateString) return false;
+      const today = new Date();
+      const date = new Date(dateString);
+      const diffDays = Math.floor((date - today) / (1000 * 60 * 60 * 24));
+      return diffDays >= 0 && diffDays <= 10;
+    }
+
+    function getOverallStatus(record) {
+      const p = normalizeProduct(record);
+      const inspection = String(p.inspection_status).toLowerCase();
+      const recall = String(p.recall_status).toLowerCase();
+      const risk = String(p.risk_level).toLowerCase();
+      if (inspection === "failed" || recall === "active" || risk === "high" || risk === "critical") return "Not Qualified";
+      if (inspection === "passed" && ["none", "no", "clear"].includes(recall) && risk === "low") return "Qualified";
+      return "Needs Review";
+    }
+
+    function getOverallStatusClass(status) {
+      if (status === "Qualified") return "status-qualified";
+      if (status === "Not Qualified") return "status-not-qualified";
+      return "status-review";
+    }
+
+    function getQualityCheck(record) {
+      const p = consumerView(record);
+      const requiredFields = ["product_name", "batch_id", "qr_code_id", "category", "origin", "inspection_status", "recall_status", "risk_level", "expiration_date", "last_updated"];
+      const missing = requiredFields.filter(field => !p[field]);
+      const score = Math.round(((requiredFields.length - missing.length) / requiredFields.length) * 1000) / 10;
+      return { score, missing, ready: missing.length === 0 };
+    }
+
+    function updateMetrics() {
+      const normalized = products.map(normalizeProduct);
+      document.getElementById("totalProducts").textContent = products.length;
+      document.getElementById("activeRecalls").textContent = normalized.filter(p => String(p.recall_status).toLowerCase() === "active").length;
+      document.getElementById("passedInspections").textContent = normalized.filter(p => String(p.inspection_status).toLowerCase() === "passed").length + " / " + products.length;
+      document.getElementById("expiringSoon").textContent = normalized.filter(p => isExpiringSoon(p.expiration_date)).length;
+    }
+
+    function populateProductSelect(filteredProducts) {
+      const select = document.getElementById("productSelect");
+      select.innerHTML = "";
+      filteredProducts.forEach(item => {
+        const p = normalizeProduct(item.data);
+        const option = document.createElement("option");
+        option.value = item.originalIndex;
+        option.textContent = `${p.product_name} | ${p.batch_id}`;
+        select.appendChild(option);
+      });
+    }
+
+    function renderOverviewPage() {
+      const filteredProducts = getFilteredProducts();
+      const rows = filteredProducts.map(item => {
+        const p = normalizeProduct(item.data);
+        const status = getOverallStatus(item.data);
+        const statusClass = getOverallStatusClass(status);
+        return `<tr onclick="openProductDetail(${item.originalIndex})"><td>${p.product_name || "N/A"}</td><td>${p.category || "N/A"}</td><td>${p.batch_id || "N/A"}</td><td>${p.inspection_status || "N/A"}</td><td>${p.recall_status || "N/A"}</td><td>${p.risk_level || "N/A"}</td><td><span class="${statusClass}">${status}</span></td></tr>`;
+      }).join("");
+      document.getElementById("overviewPage").innerHTML = `<div class="overview-card"><div class="overview-title">All Food Safety Records</div><div class="overview-description">This overview helps users quickly scan all product records and identify whether each food item is qualified, not qualified, or needs review based on inspection status, recall status, and risk level. Click any row to open the detailed product view.</div><table class="overview-table"><thead><tr><th>Product Name</th><th>Category</th><th>Batch ID</th><th>Inspection</th><th>Recall</th><th>Risk</th><th>Overall Status</th></tr></thead><tbody>${rows || `<tr><td colspan="7">No matching records found.</td></tr>`}</tbody></table></div>`;
+    }
+
+    function renderProduct() {
+      const select = document.getElementById("productSelect");
+      const role = document.getElementById("roleSelect").value;
+      const index = Number(select.value);
+      if (Number.isNaN(index)) {
+        document.getElementById("productOutput").innerHTML = `<div class="product-card">No matching product found.</div>`;
+        return;
+      }
+
+      const record = products[index];
+      const publicRecord = consumerView(record);
+      const recallStatus = String(publicRecord.recall_status).toLowerCase();
+      const quality = getQualityCheck(record);
+
+      const recallBox = recallStatus === "active"
+        ? `<div class="notice"><strong>Warning:</strong> This product has an active recall status. <br><strong>Reason:</strong> ${publicRecord.recall_reason || "No reason provided."}</div>`
+        : `<div class="good-notice"><strong>Status:</strong> No active recall is currently listed for this product record.</div>`;
+
+      const steps = record.supply_chain_information?.processing_steps || [];
+      const timeline = steps.length ? `<h3>Supply Chain Timeline</h3><ol>${steps.map(step => `<li><strong>${step.step_name}</strong> — ${step.location} — ${step.step_date}</li>`).join("")}</ol>` : "";
+      const jsonView = role === "regulator" ? JSON.stringify(record, null, 2) : JSON.stringify(publicRecord, null, 2);
+      const jsonTitle = role === "regulator" ? "Regulator-Only Full JSON Record" : "Consumer Portable JSON View";
+
+      document.getElementById("productOutput").innerHTML = `
+        <div class="product-card">
+          <div class="product-title">${publicRecord.product_name}</div>
+          <div class="product-meta">Brand: ${publicRecord.brand_name || "N/A"} | Batch: ${publicRecord.batch_id || "N/A"} | QR ID: ${publicRecord.qr_code_id || "N/A"}</div>
+          ${statusBadge(publicRecord.inspection_status, "inspection")} ${statusBadge(publicRecord.recall_status, "recall")} ${statusBadge(publicRecord.risk_level, "risk")}
+          ${recallBox}
+          <table class="info-table">
+            <tr><td>Category</td><td>${publicRecord.category || "N/A"}</td></tr>
+            <tr><td>Origin</td><td>${publicRecord.origin || "N/A"}</td></tr>
+            <tr><td>GTIN</td><td>${publicRecord.gtin || "N/A"}</td></tr>
+            <tr><td>Inspection Status</td><td>${publicRecord.inspection_status || "N/A"}</td></tr>
+            <tr><td>Inspection Date</td><td>${publicRecord.inspection_date || "N/A"}</td></tr>
+            <tr><td>Temperature Status</td><td>${publicRecord.temperature_status || "N/A"}</td></tr>
+            <tr><td>Quality Score</td><td>${publicRecord.quality_score || "N/A"}</td></tr>
+            <tr><td>Allergen Warning</td><td>${publicRecord.allergen_warning || "N/A"}</td></tr>
+            <tr><td>Recall Status</td><td>${publicRecord.recall_status || "N/A"}</td></tr>
+            <tr><td>Risk Level</td><td>${publicRecord.risk_level || "N/A"}</td></tr>
+            <tr><td>Last Recall Check</td><td>${publicRecord.last_recall_check || "N/A"}</td></tr>
+            <tr><td>Expiration Date</td><td>${publicRecord.expiration_date || "N/A"}</td></tr>
+            <tr><td>Last Updated</td><td>${publicRecord.last_updated || "N/A"}</td></tr>
+            <tr><td>Source System</td><td>${publicRecord.source_system || "N/A"}</td></tr>
+            <tr><td>Data Quality Score</td><td>${quality.score}%</td></tr>
+            <tr><td>Portable JSON Ready</td><td>${quality.ready ? "Yes" : "No"}</td></tr>
+          </table>
+          ${timeline}
+          <h3>${jsonTitle}</h3>
+          <pre>${jsonView}</pre>
+        </div>`;
+    }
+
+    function renderQualityPage() {
+      const start = performance.now();
+      for (let i = 0; i < 1000; i++) products.forEach(product => consumerView(product));
+      const end = performance.now();
+      const totalSeconds = (end - start) / 1000;
+      const averageLookup = totalSeconds / (1000 * products.length);
+      const qualityRows = products.map(product => {
+        const p = consumerView(product);
+        const quality = getQualityCheck(product);
+        return `<tr><td>${p.product_name}</td><td>${p.batch_id}</td><td>${quality.score}%</td><td>${quality.missing.length ? quality.missing.join(", ") : "None"}</td><td>${quality.ready ? "Yes" : "No"}</td></tr>`;
+      }).join("");
+      const readyCount = products.filter(product => getQualityCheck(product).ready).length;
+
+      document.getElementById("qualityPage").innerHTML = `
+        <div class="test-card">
+          <div class="test-title">Quality & Performance Test Summary</div>
+          <div class="test-description">This section documents whether the portable information structure is complete enough for the information story and whether the prototype lookup operation meets the performance target.</div>
+          <div class="summary-grid">
+            <div class="summary-box"><strong>Portable JSON Ready</strong><br>${readyCount} / ${products.length} records</div>
+            <div class="summary-box"><strong>Total Performance Test Time</strong><br>${totalSeconds.toFixed(4)} seconds</div>
+            <div class="summary-box"><strong>Average Lookup Time</strong><br>${averageLookup.toFixed(6)} seconds</div>
+          </div>
+          <h3>Data Quality Test</h3>
+          <table class="overview-table"><thead><tr><th>Product Name</th><th>Batch ID</th><th>Quality Score</th><th>Missing Required Fields</th><th>Ready</th></tr></thead><tbody>${qualityRows}</tbody></table>
+          <h3>Performance Target</h3>
+          <table class="info-table">
+            <tr><td>Test Name</td><td>Consumer View Lookup Performance</td></tr>
+            <tr><td>Iterations</td><td>1000 per product</td></tr>
+            <tr><td>Performance Target</td><td>Under 2 seconds per lookup</td></tr>
+            <tr><td>Target Met</td><td>${averageLookup < 2 ? "Yes" : "No"}</td></tr>
+          </table>
+        </div>`;
+    }
+
+    function openProductDetail(index) {
+      document.getElementById("productSelect").value = index;
+      showDetailPage();
+      renderProduct();
+    }
+
+    function showOverviewPage() {
+      document.getElementById("overviewPage").style.display = "block";
+      document.getElementById("productOutput").style.display = "none";
+      document.getElementById("qualityPage").style.display = "none";
+      document.getElementById("roleSelect").style.display = "none";
+      document.getElementById("productSelect").style.display = "none";
+      document.getElementById("overviewTab").classList.add("active-tab");
+      document.getElementById("detailTab").classList.remove("active-tab");
+      document.getElementById("qualityTab").classList.remove("active-tab");
+      renderOverviewPage();
+    }
+
+    function showDetailPage() {
+      document.getElementById("overviewPage").style.display = "none";
+      document.getElementById("productOutput").style.display = "block";
+      document.getElementById("qualityPage").style.display = "none";
+      document.getElementById("roleSelect").style.display = "block";
+      document.getElementById("productSelect").style.display = "block";
+      document.getElementById("overviewTab").classList.remove("active-tab");
+      document.getElementById("detailTab").classList.add("active-tab");
+      document.getElementById("qualityTab").classList.remove("active-tab");
+      renderProduct();
+    }
+
+    function showQualityPage() {
+      document.getElementById("overviewPage").style.display = "none";
+      document.getElementById("productOutput").style.display = "none";
+      document.getElementById("qualityPage").style.display = "block";
+      document.getElementById("roleSelect").style.display = "none";
+      document.getElementById("productSelect").style.display = "none";
+      document.getElementById("overviewTab").classList.remove("active-tab");
+      document.getElementById("detailTab").classList.remove("active-tab");
+      document.getElementById("qualityTab").classList.add("active-tab");
+      renderQualityPage();
+    }
+
+    function refreshPage() {
+      const filteredProducts = getFilteredProducts();
+      populateProductSelect(filteredProducts);
+      if (document.getElementById("overviewPage").style.display !== "none") renderOverviewPage();
+      else if (document.getElementById("qualityPage").style.display !== "none") renderQualityPage();
+      else renderProduct();
+    }
+
+    function downloadConsumerJSON() {
+      const consumerRecords = products.map(product => consumerView(product));
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(consumerRecords, null, 2));
+      const downloadAnchor = document.createElement("a");
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", "consumer_portable_food_safety_records.json");
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+    }
+
+    document.getElementById("searchInput").addEventListener("input", refreshPage);
+    document.getElementById("roleSelect").addEventListener("change", renderProduct);
+    document.getElementById("productSelect").addEventListener("change", renderProduct);
+    document.getElementById("overviewTab").addEventListener("click", showOverviewPage);
+    document.getElementById("detailTab").addEventListener("click", showDetailPage);
+    document.getElementById("qualityTab").addEventListener("click", showQualityPage);
+
+    updateMetrics();
+    refreshPage();
+    showOverviewPage();
+  </script>
+</body>
+</html>
