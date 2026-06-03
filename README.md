@@ -51,6 +51,8 @@ This is the API design and documentation for the system. It describes the API's 
 ### ✅ G9 — Test Plan 
 This is the quality-control and reliability test plan for the system. It defines quality objectives (accuracy, availability, performance, portability, security/privacy, traceability) and provides detailed test matrices for functional testing, data-quality testing, and performance/load testing. It also specifies alarms and monitoring triggers (API down, high latency, stale recall data, schema-validation failures, unauthorized access attempts) with their corresponding actions, plus an ongoing implementation plan covering development, pre-release checks, continuous CI/CD testing, and scheduled monitoring. It closes with team responsibilities and a roadmap of future testing additions.
 
+
+
 ---
 
 ### 🎓 IMT542 FINAL — Final Presentation 
@@ -83,6 +85,9 @@ This is the consumer-facing **dashboard** that renders product safety informatio
 **▶️ [Open the live site](https://mondr653-ux.github.io/Final-Project-/)**
 
 This is the main entry-point web page for the project — the landing page that ties the system together and provides access to the dashboard and product lookup. It is hosted live on **GitHub Pages at https://mondr653-ux.github.io/Final-Project-/** and serves as the front door for users opening the project as a website, presenting the food safety system in a browser-ready interface.
+
+The prototype includes a quality test checking required fields and a performance test that repeatedly generates consumer-facing JSON views.
+
 
 ---
 
