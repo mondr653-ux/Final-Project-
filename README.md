@@ -54,8 +54,9 @@ This is the quality-control and reliability test plan for the system. It defines
 
 ---
 
-### 🎓 IMT542 FINAL — Final Presentation (`IMT542_FINAL.pptx`)
+### 🎓 IMT542 FINAL — Final Presentation 
 This is the consolidated final presentation deck for the IMT 542 course — a 10-slide capstone that tells the complete project story. It walks through the **information problem** (food safety data exists but isn't portable at the decision point), the **users and access views** (everyday consumer, supply chain manager, health inspector), and the **existing information structures** the prototype builds on (GS1 Digital Link, the openFDA recall feed, and supplier/inspection records). It presents the **FAIR assessment** of the current state, the **deficiencies** that drove the redesign, and the **new portable JSON schema** that separates stable product identity from dynamic safety and access metadata. The deck closes with the **prototype access flow** (QR scan → API request → ETL + validation → access filter → actionable output), the **quality/performance/security test controls**, and the **community outcomes and GitHub deliverables**. It serves as the presentation that ties every component of the repository into a single, coherent narrative.
+(https://github.com/mondr653-ux/Final-Project-/raw/main/IMT542_FINAL.pptx)
 
 ---
 
