@@ -14,7 +14,6 @@ A portable, QR-code–based food safety system that lets consumers, suppliers, r
 | **🖥️ Main Site (index.html)** | **▶️ [Open the live dashboard](https://mondr653-ux.github.io/Final-Project-/)** | The full QR-Code Food Safety Dashboard hosted on GitHub Pages — total products, active recalls, inspections passed, consumer/regulator views, and JSON export. |
 | **📊 Food Safety Dashboard (food_safety_dashboard.html)** | **▶️ [Open the dashboard page](https://mondr653-ux.github.io/Final-Project-/food_safety_dashboard.html)** | The product safety card view — identity, expiration, inspection, origin, processing chain, allergens, nutrition, and recall alerts. |
 
-> 💡 **Both pages open directly in your browser** — just click the links above. No installation needed. The main site is live at **https://mondr653-ux.github.io/Final-Project-/**
 
 ---
 
@@ -24,32 +23,32 @@ This repository brings together every stage of the project — from the original
 
 ---
 
-### 📊 G2 — Food Inspection & Management (`Food_Inspection___Managment.csv`)
+### 📊 G2 — Food Inspection & Management 
 This file is the project's foundational concept document, captured as a CSV. It defines the product — a *Food Safety Inspection & Management System* — along with its purpose, target beneficiaries, and intended impact. It outlines who the system serves (ordinary consumers, families, people with food allergies, patients with chronic conditions, the elderly, schools, hospitals, producers, and regulators) and lays out the three core product directions: a QR-label scanner for food traceability, a standardized color-based food safety rating system, and a food-health mobile app with alerts and recall notifications. This document anchors the rest of the project by establishing the problem space and the value proposition.
 
 ---
 
-### 📱 G4 — FoodSpy App Concept & Architecture (`G4.pdf`)
+### 📱 G4 — FoodSpy App Concept & Architecture 
 This is the product concept and system-architecture deck for **FoodSpy**, the mobile food-inspection app. It describes the five core user actions (scan a QR code, check food source and processing, check additives and health score, receive recall alerts, and view company information) and presents the underlying data architecture. The deck includes the **controlled vocabulary** (e.g., `product_id`, `origin_location`, `processing_steps`, `additive_list`, `safety_rating`, `recall_status`) and the **derived/calculated data** fields (`health_score`, `risk_level`, `transparency_score`). It also defines the basic system architecture — batch regulatory datasets, real-time consumer scans, and external recall APIs — and the data flow: *Scan → product_id → retrieve data → generate insights → display.*
 
 ---
 
-### 🔗 G5 — FAIR Model Analysis (`G5FAIR_model.txt`)
+### 🔗 G5 — FAIR Model Analysis 
 This document evaluates the food safety information structure against the **FAIR principles** (Findable, Accessible, Interoperable, Reusable). It explains how each product or batch receives a unique `product_id`/`batch_id` linked to a QR code with descriptive metadata (Findability); how consumers retrieve information through a standard web/app interface while sensitive data stays behind authentication (Accessibility); how the structured JSON format with consistent fields enables data exchange between companies, regulators, and consumer apps (Interoperability); and how provenance tracking — origin, who updated a record, inspection timing, and data source — supports reuse (Reusability). It also honestly notes the gaps still to close: a clearer data-usage license and stronger food-safety standards.
 
 ---
 
-### 🧱 G7 — Improved Information Structure (`G7.txt`)
+### 🧱 G7 — Improved Information Structure 
 This file documents the heart of the project: the redesign of the information structure. It first shows the **existing** GS1 Digital Link structure and its limitations (no origin location, no processing steps, no inspection status, no recall status, no access control, no change log). It then presents the **improved** structure — the *QR-Code-Based Food Safety Record* — a hierarchical JSON schema that extends GS1 with `record_metadata`, `product_identifier`, `supply_chain_information` (including step-by-step processing history), `safety_and_quality_information`, `recall_information`, and `system_and_security_metadata` with role-based public/private access control and audit tracking. This is the canonical schema that the prototype and dashboard are built around.
 
 ---
 
-### 📖 G8 — QR-Code Food Safety Inspector API (`QR-Code_Food_Safety_Inspector_API.md`)
+### 📖 G8 — QR-Code Food Safety Inspector API 
 This is the API design and documentation for the system. It describes the API's purpose and audience, the methodology for aggregating data from supplier databases, state inspection records, and federal recall feeds, and the role-based access model. A key section covers the **technical mechanisms to prevent misinformation** through three trust pillars: cryptographic digital signatures (an electronic seal that invalidates tampered records), live API oracles that cross-reference official government databases in real time, and GS1 Digital Link domain verification. The document includes the access flow for consumers vs. regulators, the nested JSON structure, and a worked example request/response showing how `consumer_access_view` filters out sensitive backend fields.
 
 ---
 
-### ✅ G9 — Test Plan (`G9-Testplan.md`)
+### ✅ G9 — Test Plan 
 This is the quality-control and reliability test plan for the system. It defines quality objectives (accuracy, availability, performance, portability, security/privacy, traceability) and provides detailed test matrices for functional testing, data-quality testing, and performance/load testing. It also specifies alarms and monitoring triggers (API down, high latency, stale recall data, schema-validation failures, unauthorized access attempts) with their corresponding actions, plus an ongoing implementation plan covering development, pre-release checks, continuous CI/CD testing, and scheduled monitoring. It closes with team responsibilities and a roadmap of future testing additions.
 
 ---
@@ -59,7 +58,7 @@ This is the consolidated final deliverable for the IMT 542 course, bringing toge
 
 ---
 
-### 🏷️ Portable GS1 — Baseline Reference Structure (`Portable_GS1.txt`)
+### 🏷️ Portable GS1 — Baseline Reference Structure 
 This file captures the **starting point** for the whole project: the standard **GS1 Digital Link** structure as it exists today. It documents the URI format encoded in the QR code, the parsed identifiers (GTIN, batch/lot number, expiration date), and the linked web resources (product landing, traceability, and nutrition pages). Crucially, it records the **observed limitations** for this project — the fields GS1 does *not* provide, such as origin location, processing facility, inspection status, recall status, verification status, access control, and change log. These documented gaps are exactly what the improved structure (G7) was designed to fill.
 
 ---
