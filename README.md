@@ -112,7 +112,7 @@ The prototype includes a quality test checking required fields and a performance
 | Quality | G9 Test Plan | How do we know it works and stays reliable? |
 | Prototype | Portable_info_QR.ipynb | A runnable demo |
 | Interface | food_safety_dashboard.html, index.html | What the user sees |
-| Capstone | IMT542 FINAL (.pdf) | The full project, presented |
+| Presentation | IMT542 FINAL (.pdf) | The full project, presented |
 
 ---
 
