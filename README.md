@@ -23,17 +23,17 @@ This repository brings together every stage of the project — from the original
 
 ---
 
-### 📊 G2 — Food Inspection & Management 
+### 📊 — Food Inspection & Management 
 This file is the project's foundational concept document, captured as a CSV. It defines the product — a *Food Safety Inspection & Management System* — along with its purpose, target beneficiaries, and intended impact. It outlines who the system serves (ordinary consumers, families, people with food allergies, patients with chronic conditions, the elderly, schools, hospitals, producers, and regulators) and lays out the three core product directions: a QR-label scanner for food traceability, a standardized color-based food safety rating system, and a food-health mobile app with alerts and recall notifications. This document anchors the rest of the project by establishing the problem space and the value proposition.
 
 ---
 
-### 📱 G4 — FoodSpy App Concept & Architecture
+### 📱 — FoodSpy App Concept & Architecture
 This is the product concept and system-architecture deck for **FoodSpy**, the mobile food-inspection app. It describes the five core user actions (scan a QR code, check food source and processing, check additives and health score, receive recall alerts, and view company information) and presents the underlying data architecture. The deck includes the **controlled vocabulary** (e.g., `product_id`, `origin_location`, `processing_steps`, `additive_list`, `safety_rating`, `recall_status`) and the **derived/calculated data** fields (`health_score`, `risk_level`, `transparency_score`). It also defines the basic system architecture — batch regulatory datasets, real-time consumer scans, and external recall APIs — and the data flow: *Scan → product_id → retrieve data → generate insights → display.*
 
 ---
 
-### 🔗 G5 — FAIR Model Analysis 
+### 🔗 — FAIR Model Analysis 
 This document evaluates the food safety information structure against the **FAIR principles** (Findable, Accessible, Interoperable, Reusable). It explains how each product or batch receives a unique `product_id`/`batch_id` linked to a QR code with descriptive metadata (Findability); how consumers retrieve information through a standard web/app interface while sensitive data stays behind authentication (Accessibility); how the structured JSON format with consistent fields enables data exchange between companies, regulators, and consumer apps (Interoperability); and how provenance tracking — origin, who updated a record, inspection timing, and data source — supports reuse (Reusability). It also honestly notes the gaps still to close: a clearer data-usage license and stronger food-safety standards.
 
 ---
