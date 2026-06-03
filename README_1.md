@@ -71,7 +71,7 @@ This is the working **Google Colab prototype** of the system. The notebook inclu
 ---
 
 ### 🖥️ food_safety_dashboard.html
-**▶️ [Open this page live](httpsfiles:///Users/haochenxu/Downloads/food_safety_dashboard.html)**
+**▶️ [Open this page live](files:///Users/haochenxu/Downloads/food_safety_dashboard.html)**
 
 This is the consumer-facing **dashboard** that renders product safety information in a clean, mobile-friendly layout. It displays product identity, expiration status, inspection results, origin and processing chain, allergens, nutrition, and any active recall alerts as visual cards. It can be opened directly in a browser or rendered inline inside the Colab notebook, giving consumers an at-a-glance, easy-to-read view of whether a scanned product is safe.
 
