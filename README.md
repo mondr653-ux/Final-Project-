@@ -38,17 +38,17 @@ This document evaluates the food safety information structure against the **FAIR
 
 ---
 
-### 🧱 G7 — Improved Information Structure 
+### 🧱  — Improved Information Structure 
 This file documents the heart of the project: the redesign of the information structure. It first shows the **existing** GS1 Digital Link structure and its limitations (no origin location, no processing steps, no inspection status, no recall status, no access control, no change log). It then presents the **improved** structure — the *QR-Code-Based Food Safety Record* — a hierarchical JSON schema that extends GS1 with `record_metadata`, `product_identifier`, `supply_chain_information` (including step-by-step processing history), `safety_and_quality_information`, `recall_information`, and `system_and_security_metadata` with role-based public/private access control and audit tracking. This is the canonical schema that the prototype and dashboard are built around.
 
 ---
 
-### 📖 G8 — QR-Code Food Safety Inspector API 
+### 📖  — QR-Code Food Safety Inspector API 
 This is the API design and documentation for the system. It describes the API's purpose and audience, the methodology for aggregating data from supplier databases, state inspection records, and federal recall feeds, and the role-based access model. A key section covers the **technical mechanisms to prevent misinformation** through three trust pillars: cryptographic digital signatures (an electronic seal that invalidates tampered records), live API oracles that cross-reference official government databases in real time, and GS1 Digital Link domain verification. The document includes the access flow for consumers vs. regulators, the nested JSON structure, and a worked example request/response showing how `consumer_access_view` filters out sensitive backend fields.
 
 ---
 
-### ✅ G9 — Test Plan 
+### ✅  — Test Plan 
 This is the quality-control and reliability test plan for the system. It defines quality objectives (accuracy, availability, performance, portability, security/privacy, traceability) and provides detailed test matrices for functional testing, data-quality testing, and performance/load testing. It also specifies alarms and monitoring triggers (API down, high latency, stale recall data, schema-validation failures, unauthorized access attempts) with their corresponding actions, plus an ongoing implementation plan covering development, pre-release checks, continuous CI/CD testing, and scheduled monitoring. It closes with team responsibilities and a roadmap of future testing additions.
 
 
