@@ -13,7 +13,7 @@ A portable, QR-code–based food safety system that lets consumers, suppliers, r
 |---|---|---|
 | **🖥️ Main Site (index.html)** | **▶️ [Open the live dashboard](https://mondr653-ux.github.io/Final-Project-/)** | The full QR-Code Food Safety Dashboard hosted on GitHub Pages — total products, active recalls, inspections passed, consumer/regulator views, and JSON export. |
 | **📊 Food Safety Dashboard (food_safety_dashboard.html)** | **▶️ [Open the dashboard page](https://mondr653-ux.github.io/Final-Project-/food_safety_dashboard.html)** | The product safety card view — identity, expiration, inspection, origin, processing chain, allergens, nutrition, and recall alerts. |
-| **🎓 Final Presentation (IMT542_FINAL.pdf)** | **▶️ [Open the slides (PDF)](https://github.com/mondr653-ux/Final-Project-/blob/main/IMT542_FINAL.pdf)** | The 10-slide capstone deck — problem, users, FAIR assessment, JSON schema, access flow, and outcomes. |
+| **🎓 Final Presentation (IMT542_FINAL.pdf)** | **▶️ [Open the slides (PDF)](IMT542 FINAL.pdf)** | The 10-slide capstone deck — problem, users, FAIR assessment, JSON schema, access flow, and outcomes. |
 
 > 💡 **Both pages open directly in your browser** — just click the links above. No installation needed. The main site is live at **https://mondr653-ux.github.io/Final-Project-/**
 
