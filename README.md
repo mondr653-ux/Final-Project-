@@ -13,6 +13,7 @@ A portable, QR-code–based food safety system that lets consumers, suppliers, r
 |---|---|---|
 | **🖥️ Main Site (index.html)** | **▶️ [Open the live dashboard](https://mondr653-ux.github.io/Final-Project-/)** | The full QR-Code Food Safety Dashboard hosted on GitHub Pages — total products, active recalls, inspections passed, consumer/regulator views, and JSON export. |
 | **📊 Food Safety Dashboard (food_safety_dashboard.html)** | **▶️ [Open the dashboard page](https://mondr653-ux.github.io/Final-Project-/food_safety_dashboard.html)** | The product safety card view — identity, expiration, inspection, origin, processing chain, allergens, nutrition, and recall alerts. |
+| **🎓 Final Presentation (IMT542_FINAL.pptx)** | **▶️ [View slides online](https://view.officeapps.live.com/op/view.aspx?src=https://raw.githubusercontent.com/mondr653-ux/Final-Project-/main/IMT542_FINAL.pptx)** | The 10-slide capstone deck — problem, users, FAIR assessment, JSON schema, access flow, and outcomes. |
 
 > 💡 **Both pages open directly in your browser** — just click the links above. No installation needed. The main site is live at **https://mondr653-ux.github.io/Final-Project-/**
 
@@ -54,9 +55,10 @@ This is the quality-control and reliability test plan for the system. It defines
 
 ---
 
-### 🎓 IMT542 FINAL — Final Presentation 
-This is the consolidated final presentation deck for the IMT 542 course — a 10-slide capstone that tells the complete project story. It walks through the **information problem** (food safety data exists but isn't portable at the decision point), the **users and access views** (everyday consumer, supply chain manager, health inspector), and the **existing information structures** the prototype builds on (GS1 Digital Link, the openFDA recall feed, and supplier/inspection records). It presents the **FAIR assessment** of the current state, the **deficiencies** that drove the redesign, and the **new portable JSON schema** that separates stable product identity from dynamic safety and access metadata. The deck closes with the **prototype access flow** (QR scan → API request → ETL + validation → access filter → actionable output), the **quality/performance/security test controls**, and the **community outcomes and GitHub deliverables**. It serves as the presentation that ties every component of the repository into a single, coherent narrative.
+### 🎓 IMT542 FINAL — Final Presentation (`IMT542_FINAL.pptx`)
+**▶️ [View slides online](https://view.officeapps.live.com/op/view.aspx?src=https://raw.githubusercontent.com/mondr653-ux/Final-Project-/main/IMT542_FINAL.pptx)** &nbsp;·&nbsp; **⬇️ [Download the .pptx](https://github.com/mondr653-ux/Final-Project-/raw/main/IMT542_FINAL.pptx)**
 
+This is the consolidated final presentation deck for the IMT 542 course — a 10-slide capstone that tells the complete project story. It walks through the **information problem** (food safety data exists but isn't portable at the decision point), the **users and access views** (everyday consumer, supply chain manager, health inspector), and the **existing information structures** the prototype builds on (GS1 Digital Link, the openFDA recall feed, and supplier/inspection records). It presents the **FAIR assessment** of the current state, the **deficiencies** that drove the redesign, and the **new portable JSON schema** that separates stable product identity from dynamic safety and access metadata. The deck closes with the **prototype access flow** (QR scan → API request → ETL + validation → access filter → actionable output), the **quality/performance/security test controls**, and the **community outcomes and GitHub deliverables**. It serves as the presentation that ties every component of the repository into a single, coherent narrative.
 
 ---
 
