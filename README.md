@@ -38,7 +38,7 @@ This document evaluates the food safety information structure against the **FAIR
 
 ---
 
-### 🧱  — Improved Information Structure 
+### 🧱  — Existing Information Structure 
 This file documents the heart of the project: the redesign of the information structure. It first shows the **existing** GS1 Digital Link structure and its limitations (no origin location, no processing steps, no inspection status, no recall status, no access control, no change log). It then presents the **improved** structure — the *QR-Code-Based Food Safety Record* — a hierarchical JSON schema that extends GS1 with `record_metadata`, `product_identifier`, `supply_chain_information` (including step-by-step processing history), `safety_and_quality_information`, `recall_information`, and `system_and_security_metadata` with role-based public/private access control and audit tracking. This is the canonical schema that the prototype and dashboard are built around.
 
 ---
@@ -104,12 +104,12 @@ The prototype includes a quality test checking required fields and a performance
 
 | Stage | File(s) | What it answers |
 |---|---|---|
-| Concept | G2, G4 | What are we building and for whom? |
+| Concept | Food Inspection & Management, FoodSpy App Concept & Architecture | What are we building and for whom? |
 | Baseline | Portable GS1 | What does the existing standard offer — and lack? |
-| Redesign | G7 | How do we improve the information structure? |
-| Principles | G5 FAIR model | Is the structure findable, accessible, interoperable, reusable? |
-| Access & trust | G8 API | How do users retrieve data, and how do we prevent misinformation? |
-| Quality | G9 Test Plan | How do we know it works and stays reliable? |
+| Redesign | Existing Information Structure  | How do we improve this information structure? |
+| Principles |  FAIR model | Is the structure findable, accessible, interoperable, reusable? |
+| Access & trust | QR-Code Food Safety Inspector API | How do users retrieve data, and how do we prevent misinformation? |
+| Quality | Test Plan | How do we know it works and stays reliable? |
 | Prototype | Portable_info_QR.ipynb | A runnable demo |
 | Interface | food_safety_dashboard.html, index.html | What the user sees |
 | Presentation | IMT542 FINAL (.pdf) | The full project, presented |
