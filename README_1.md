@@ -66,12 +66,12 @@ This file captures the **starting point** for the whole project: the standard **
 ### 🐍 Project: Portable_info_QR.ipynb
 This is the working **Google Colab prototype** of the system. The notebook includes an *Open in Colab* badge, file-upload support, and a `FoodSafetySystem` class that generates QR codes for food products using the improved JSON schema. It builds sample product records, generates scannable QR codes, renders the food safety dashboard inline, and runs quality checks and a performance benchmark (timing 1,000 consumer-view lookups across the product set). This notebook is the runnable heart of the project — open it in Colab to generate QR codes and explore product records end-to-end.
 
-> **To run:** Open the notebook, upload `export_all_products.json` and `food_safety_dashboard.html` when prompted, then run the cells in order.
+
 
 ---
 
 ### 🖥️ food_safety_dashboard.html
-**▶️ [Open this page live](file:///Users/haochenxu/Downloads/food_safety_dashboard.html)**
+**▶️ [Open this page live](http:///Users/haochenxu/Downloads/food_safety_dashboard.html)**
 
 This is the consumer-facing **dashboard** that renders product safety information in a clean, mobile-friendly layout. It displays product identity, expiration status, inspection results, origin and processing chain, allergens, nutrition, and any active recall alerts as visual cards. It can be opened directly in a browser or rendered inline inside the Colab notebook, giving consumers an at-a-glance, easy-to-read view of whether a scanned product is safe.
 
